@@ -3,17 +3,11 @@ package me.ialistannen.minigameframeworky.config.parts
 /**
  * The abstract Base class for [ConfigurationSection]
  */
-abstract class BaseConfigurationSection : ConfigurationSection, Documentable {
+abstract class BaseConfigurationSection : ConfigurationSection {
 
-    override var parent: ConfigurationSection? by kotlin.properties.Delegates.observable(null) {
-        _, _: ConfigurationSection?, newValue: ConfigurationSection? ->
-        cachedPath = getPathForParent(newValue)
-        println("Parent for '$keyword' changed to '$newValue'")
-    }
-
-    private var cachedPath: String? = null
+    override var parent: ConfigurationSection? = null
     private var keywordImpl: String? = null
-    private var commentImpl = ""
+    private val commentImpl: MutableList<String> = ArrayList()
 
     override val children: List<ConfigurationSection> = ArrayList()
 
@@ -24,27 +18,20 @@ abstract class BaseConfigurationSection : ConfigurationSection, Documentable {
         get() = keywordImpl ?: ""
 
     override fun getPath(): String {
-        if (cachedPath == null) {
-            cachedPath = getPathForParent(parent)
-        }
-
-        return cachedPath ?: ""
-    }
-
-    private fun getPathForParent(newValue: ConfigurationSection?): String {
-        var path = newValue?.getPath() ?: ""
+        var path = parent?.getPath() ?: ""
         if (path.isNotBlank()) {
             path += "."
         }
         path += keyword
         return path
+
     }
 
-    override val comment: String
+    override val comment: List<String>
         get() = commentImpl
 
-    override fun doc(comment: String) {
-        commentImpl = comment
+    override fun doc(comments: Iterable<String>) {
+        commentImpl.addAll(comments)
     }
 
     /**

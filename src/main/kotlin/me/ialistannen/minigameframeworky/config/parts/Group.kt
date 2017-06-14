@@ -32,13 +32,21 @@ class Group : BaseConfigurationSection() {
      * Sets an entry. Makes a new [Key].
      *
      * @param path The path to set the value for
-     * @param comment An optional comment. Default is an empty String
+     * @param comment An optional comment. Default is an empty String. If you pass nothing,
+     * it will preserve any comment that is already present.
      * @param value The value
      */
     operator fun set(path: String, comment: String = "", value: Any?) {
+        val finalComment: String
+        if (comment.isNotEmpty()) {
+            finalComment = comment
+        } else {
+            val section = get(path)
+            finalComment = section?.comment?.joinToString(System.lineSeparator()) ?: ""
+        }
         this[path] = Key().also {
             it value value
-            it doc comment
+            it doc finalComment
         }
     }
 
@@ -186,11 +194,10 @@ class Group : BaseConfigurationSection() {
         group.init()
         group.parent = this
         childrenModifiable.add(group)
-        println("Added group '$group' with path '${group.getPath()}'")
     }
 
     override fun toString(): String {
-        return "Group(keyword=$keyword, path=${getPath()}, children=$children)"
+        return "Group(keyword=$keyword, path=${getPath()}, children=$children, comment=$comment)"
     }
 
 

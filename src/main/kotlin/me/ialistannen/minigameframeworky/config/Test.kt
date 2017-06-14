@@ -1,6 +1,8 @@
 package me.ialistannen.minigameframeworky.config
 
+import me.ialistannen.minigameframeworky.config.io.comment.BasicCommentInjector
 import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
+import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
 import me.ialistannen.minigameframeworky.config.parts.Key
 
@@ -8,9 +10,11 @@ fun main(args: Array<String>) {
     val config = Config("my cool one") {
         group {
             this name "myGroup"
+            this doc "TL comment"
             key {
                 this name "hey"
                 this value 32
+                this doc "This is a comment"
             }
 
             group {
@@ -19,6 +23,7 @@ fun main(args: Array<String>) {
                 this doc listOf("Kinda simple", "Multiline")
 
                 key {
+                    this doc "Deep comments are my favourite"
                     this name "deeper nested key"
                     this value "lol"
                 }
@@ -58,6 +63,7 @@ fun main(args: Array<String>) {
         override fun visit(key: Key) {
             println("Visited       : $key")
         }
+
         override fun visit(group: Group) {
             println("Visited group : $group")
         }
@@ -65,4 +71,16 @@ fun main(args: Array<String>) {
     println()
     println("==== Saving ====")
     println("Yaml:\n${YamlSaver().saveToString(config)}")
+    println()
+    println("==== Comments ====")
+    println()
+    val lineMappings: Map<Int, ConfigurationSection> = mapOf(
+            0 to config.get<Group>("myGroup")!!,
+            1 to config.get<Group>("myGroup.Another one")!!,
+            2 to config.get<Key>("myGroup.Another one.deeper nested key")!!,
+            3 to config.get<Key>("myGroup.hey")!!
+    )
+    println("With comments:\n" + BasicCommentInjector("# ").inject(
+            YamlSaver().saveToString(config), lineMappings)
+    )
 }

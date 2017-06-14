@@ -21,7 +21,7 @@ class Key : BaseConfigurationSection() {
     }
 
     override fun toString(): String {
-        return "Key(keyword=$keyword, path=${getPath()}, value=$value)"
+        return "Key(keyword=$keyword, path=${getPath()}, value=$value, comment=$comment)"
     }
 
 }

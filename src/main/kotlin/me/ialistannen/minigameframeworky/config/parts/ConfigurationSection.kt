@@ -6,7 +6,7 @@ import me.ialistannen.minigameframeworky.config.ConfigVisitor
  * The base class for config elements
  */
 @ConfigDslMarker
-interface ConfigurationSection {
+interface ConfigurationSection : Documentable {
 
     var parent: ConfigurationSection?
 

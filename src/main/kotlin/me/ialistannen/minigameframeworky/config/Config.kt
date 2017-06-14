@@ -44,6 +44,10 @@ class Config(val name: String) {
 
         val key = configurationSection as? Key ?: return null
 
+        if(T::class == Key::class) {
+            return key as T
+        }
+
         val value = key.value
 
         if (value is Number && T::class.isSubclassOf(Number::class)) {
@@ -61,7 +65,6 @@ class Config(val name: String) {
      * @param value The value
      */
     operator fun set(path: String, comment: String, value: Any?) {
-        println("path = [$path], comment = [$comment], value = [$value]")
         rootGroup[path, comment] = value
     }
 
@@ -75,7 +78,6 @@ class Config(val name: String) {
      * @see set(String, String, Any?)
      */
     operator fun set(path: String, value: Any?) {
-        println("path = [$path], value = [$value]")
         rootGroup[path, ""] = value
     }
 

@@ -5,14 +5,14 @@ package me.ialistannen.minigameframeworky.config.parts
  */
 interface Documentable {
 
-    val comment: String
+    val comment: List<String>
 
     /**
      * Sets the documentation for this [Documentable].
      *
      * @param comment The comment to display
      */
-    infix fun doc(comment: String)
+    infix fun doc(comment: String) = doc(listOf(comment))
 
     /**
      * Sets the documentation for this [Documentable].
@@ -20,7 +20,5 @@ interface Documentable {
      * @param comments The comments. Each entry is a line
      * @see doc(String)
      */
-    infix fun doc(comments: Iterable<String>) {
-        doc(comments.joinToString(separator = "\n"))
-    }
+    infix fun doc(comments: Iterable<String>)
 }
