@@ -1,5 +1,8 @@
 package me.ialistannen.minigameframeworky.config.io.comment.mapper
 
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigParser
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.YamlConfigParser
+
 /**
  * A [LineMapper] for YAML files.
  */

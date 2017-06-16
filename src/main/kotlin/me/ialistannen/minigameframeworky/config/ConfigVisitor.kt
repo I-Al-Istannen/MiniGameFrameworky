@@ -1,5 +1,6 @@
 package me.ialistannen.minigameframeworky.config
 
+import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
 import me.ialistannen.minigameframeworky.config.parts.Key
 

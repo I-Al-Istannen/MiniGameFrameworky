@@ -1,7 +1,7 @@
 package me.ialistannen.minigameframeworky.config
 
 import me.ialistannen.minigameframeworky.config.io.comment.BasicCommentInjector
-import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlConfigParser
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.YamlConfigParser
 import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlLineMapper
 import me.ialistannen.minigameframeworky.config.io.loading.YamlLoader
 import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
@@ -89,16 +89,16 @@ fun main(args: Array<String>) {
             2 to config.get<Key>("myGroup.Another one.deeper nested key")!!,
             3 to config.get<Key>("myGroup.hey")!!
     )
-    val withcomments = BasicCommentInjector("# ").inject(
+    val withComments = BasicCommentInjector("# ").inject(
             configAsString, lineMappings)
-    println("With comments:\n" + withcomments)
+    println("With comments:\n" + withComments)
     println()
     println("==== Reading back ====")
     println()
     with(YamlConfigParser()) {
         onFoundComment = { println("> $it") }
         onFoundIdentifier = { println("\t> $it") }
-        parse(withcomments)
+        parse(withComments)
     }
     println()
     println("==== Extracting Identifiers and adding comments ====")

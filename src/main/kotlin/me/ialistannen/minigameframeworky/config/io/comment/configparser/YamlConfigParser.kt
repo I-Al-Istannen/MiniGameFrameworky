@@ -1,4 +1,4 @@
-package me.ialistannen.minigameframeworky.config.io.comment.mapper
+package me.ialistannen.minigameframeworky.config.io.comment.configparser
 
 import me.ialistannen.minigameframeworky.config.io.comment.getIndent
 

@@ -1,6 +1,4 @@
-package me.ialistannen.minigameframeworky.config.io.comment.mapper
-
-import java.util.*
+package me.ialistannen.minigameframeworky.config.io.comment.configparser
 
 /**
  * A skeleton implementation for [ConfigParser]
@@ -15,8 +13,6 @@ abstract class AbstractConfigParser(override val configType: ConfigType) : Confi
 
     override var onFoundComment: (ConfigParser.FoundComment) -> Unit = {}
     override var onFoundIdentifier: (ConfigParser.FoundIdentifier) -> Unit = {}
-
-    private var mark: Deque<Int> = ArrayDeque()
 
     /**
      * Resets the state.
@@ -112,34 +108,5 @@ abstract class AbstractConfigParser(override val configType: ConfigType) : Confi
         }
 
         return eatenString
-    }
-
-    /**
-     * Marks the current [position] to be accessed later using [rewind]
-     */
-    protected fun mark() {
-        mark.addFirst(position)
-    }
-
-    /**
-     * Rewinds to the last marked with [mark]
-     *
-     * Does nothing if no mark exists.
-     */
-    protected fun rewind() {
-        if (mark.isNotEmpty()) {
-            position = mark.pollFirst()
-        }
-    }
-
-    /**
-     * Deletes [count] marks.
-     *
-     * @param count the amount of marks to delete. Default is 1.
-     */
-    protected fun deleteMark(count: Int = 1) {
-        for (i in 0 until count) {
-            mark.pollFirst()
-        }
     }
 }

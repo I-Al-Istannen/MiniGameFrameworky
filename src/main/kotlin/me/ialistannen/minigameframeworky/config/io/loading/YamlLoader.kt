@@ -1,8 +1,8 @@
 package me.ialistannen.minigameframeworky.config.io.loading
 
 import me.ialistannen.minigameframeworky.config.Config
-import me.ialistannen.minigameframeworky.config.io.comment.mapper.ConfigParser
-import me.ialistannen.minigameframeworky.config.io.comment.mapper.ConfigType
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigParser
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigType
 import org.bukkit.configuration.MemorySection
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.StringReader

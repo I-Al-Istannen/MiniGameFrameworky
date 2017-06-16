@@ -1,5 +1,7 @@
 package me.ialistannen.minigameframeworky.config.io.comment.mapper
 
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigParser
+
 /**
  * A Mapper extracting identifiers and their comments from a config
  */

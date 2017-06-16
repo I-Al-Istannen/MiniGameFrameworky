@@ -1,4 +1,4 @@
-package me.ialistannen.minigameframeworky.config.io.comment.mapper
+package me.ialistannen.minigameframeworky.config.io.comment.configparser
 
 /**
  * Parses a file in a SIMPLE way, having only two actions:
@@ -15,15 +15,15 @@ interface ConfigParser {
     /**
      * Called when a comment is found.
      */
-    var onFoundComment: (FoundComment) -> Unit
+    var onFoundComment: (ConfigParser.FoundComment) -> Unit
 
     /**
      * Called when an Identifier is found.
      */
-    var onFoundIdentifier: (FoundIdentifier) -> Unit
+    var onFoundIdentifier: (ConfigParser.FoundIdentifier) -> Unit
 
     /**
-     * Parses the input type and calls the handlers when appropiate.
+     * Parses the input type and calls the handlers when appropriate.
      *
      * @param input the input string to parse.
      */
@@ -46,7 +46,7 @@ interface ConfigParser {
 
         /**
          * @param configType The type of the config
-         * @eturn a parser for the given [ConfigType].
+         * @return a parser for the given [ConfigType].
          */
         fun getParser(configType: ConfigType): ConfigParser {
             return when (configType) {
