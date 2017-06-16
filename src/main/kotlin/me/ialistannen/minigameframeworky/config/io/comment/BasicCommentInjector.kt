@@ -15,7 +15,8 @@ class BasicCommentInjector(val commentMarker: String) : CommentInjector {
             if (it.index in lineMapping) {
                 val comment = lineMapping[it.index]?.comment ?: return@forEach
                 comment.asReversed().mapTo(output) {
-                    commentLine -> getCommentLine(it.value, commentLine)
+                    commentLine ->
+                    getCommentLine(it.value, commentLine)
                 }
             }
         }
@@ -25,8 +26,11 @@ class BasicCommentInjector(val commentMarker: String) : CommentInjector {
 
     private fun getCommentLine(identifierLine: String, comment: String)
             = " ".repeat(identifierLine.getIndent()) + commentMarker + comment
+}
 
-    private fun String.getIndent(): Int {
-        return this.takeWhile { it.isWhitespace() }.length
-    }
+/**
+ * The indent of a string
+ */
+fun String.getIndent(): Int {
+    return this.takeWhile { it.isWhitespace() }.length
 }

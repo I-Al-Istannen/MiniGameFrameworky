@@ -1,6 +1,8 @@
 package me.ialistannen.minigameframeworky.config
 
 import me.ialistannen.minigameframeworky.config.io.comment.BasicCommentInjector
+import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlConfigParser
+import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlLineMapper
 import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
 import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
@@ -70,7 +72,8 @@ fun main(args: Array<String>) {
     })
     println()
     println("==== Saving ====")
-    println("Yaml:\n${YamlSaver().saveToString(config)}")
+    val configAsString = YamlSaver().saveToString(config)
+    println("Yaml:\n$configAsString")
     println()
     println("==== Comments ====")
     println()
@@ -80,7 +83,26 @@ fun main(args: Array<String>) {
             2 to config.get<Key>("myGroup.Another one.deeper nested key")!!,
             3 to config.get<Key>("myGroup.hey")!!
     )
-    println("With comments:\n" + BasicCommentInjector("# ").inject(
-            YamlSaver().saveToString(config), lineMappings)
-    )
+    val withcomments = BasicCommentInjector("# ").inject(
+            configAsString, lineMappings)
+    println("With comments:\n" + withcomments)
+    println()
+    println("==== Reading back ====")
+    println()
+    with(YamlConfigParser()) {
+        onFoundComment = { println("> $it") }
+        onFoundIdentifier = { println("\t> $it") }
+        parse(withcomments)
+    }
+    println()
+    println("==== Extracting comments ====")
+    println()
+    val extractedComments = YamlLineMapper().extract(configAsString)
+    extractedComments.forEach { println(it) }
+    println()
+    val lineMappingsDynamic = extractedComments
+            .associateBy({ it.line }, { config.get<ConfigurationSection>(it.path)!! })
+    val withCommentsDynamic = BasicCommentInjector("# ").inject(
+            configAsString, lineMappingsDynamic)
+    println("With comments dynamic:\n$withCommentsDynamic")
 }

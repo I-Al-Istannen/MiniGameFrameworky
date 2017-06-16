@@ -38,13 +38,17 @@ class Config(val name: String) {
     operator inline fun <reified T> get(path: String): T? {
         val configurationSection: ConfigurationSection = rootGroup[path] ?: return null
 
+        if (T::class == ConfigurationSection::class) {
+            return configurationSection as T
+        }
+
         if (configurationSection is Group && T::class == Group::class) {
             return configurationSection as T
         }
 
         val key = configurationSection as? Key ?: return null
 
-        if(T::class == Key::class) {
+        if (T::class == Key::class) {
             return key as T
         }
 
