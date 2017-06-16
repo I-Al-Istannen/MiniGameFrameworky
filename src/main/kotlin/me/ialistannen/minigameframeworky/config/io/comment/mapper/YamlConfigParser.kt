@@ -9,29 +9,10 @@ class YamlConfigParser : AbstractConfigParser(ConfigType.YAML) {
 
     private val indentationPerChild: Int = 2
 
-    private var currentIndentationDeph: Int = 0
+    private var currentIndentationDepth: Int = 0
 
     override fun parse(input: String) {
         reset(input)
-
-        val margin = """
-            |# I am a long string:and I am never read
-            |# Multiline!
-            |I_am_cool:
-            |I am a very cool guy too:
-            |#Nested parent comment
-            |nested parent:
-            |  # Nested child comment:
-            |  nested child:
-            |    # deeper comment
-            |    deeper_nested child:
-            |  # not as deeply comment
-            |  not_as_deeply_nested child: lol
-            |test_list:
-            |- What an item!
-            |# Comment for after the list
-            |after the list:""".trimMargin()
-//        reset(margin)
 
         while (position < string.lastIndex) {
             readComment()
@@ -70,18 +51,18 @@ class YamlConfigParser : AbstractConfigParser(ConfigType.YAML) {
 
         val indent = lastLine.getIndent()
 
-        if (indent > currentIndentationDeph) {
+        if (indent > currentIndentationDepth) {
             if (currentPath.isNotBlank()) {
                 currentPath += "."
             }
-        } else if (indent == currentIndentationDeph) {
+        } else if (indent == currentIndentationDepth) {
             if (indent == 0) {
                 currentPath = ""
             } else {
                 currentPath = currentPath.substringBeforeLast(".") + "."
             }
-        } else if (indent < currentIndentationDeph) {
-            val stepsLeft: Int = (currentIndentationDeph - indent) / indentationPerChild
+        } else if (indent < currentIndentationDepth) {
+            val stepsLeft: Int = (currentIndentationDepth - indent) / indentationPerChild
             for (i in 0..stepsLeft) {
                 if ("." !in currentPath) {
                     currentPath = ""
@@ -95,7 +76,7 @@ class YamlConfigParser : AbstractConfigParser(ConfigType.YAML) {
         }
         currentPath += identifier
 
-        currentIndentationDeph = indent
+        currentIndentationDepth = indent
 
         onFoundIdentifier.invoke(ConfigParser.FoundIdentifier(currentPath, identifierLine))
         return identifier

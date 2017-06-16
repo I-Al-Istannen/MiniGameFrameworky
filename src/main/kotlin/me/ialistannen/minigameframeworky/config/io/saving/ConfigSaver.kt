@@ -11,8 +11,9 @@ interface ConfigSaver {
     /**
      * Saves a config to a String.
      *
-     * @param config Then [Config] to save
+     * @param config the [Config] to save
+     * @param withComments whether to include comments
      * @return the saved config as a String
      */
-    fun saveToString(config: Config): String
+    fun saveToString(config: Config, withComments: Boolean = true): String
 }

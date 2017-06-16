@@ -36,13 +36,14 @@ class Group : BaseConfigurationSection() {
      * it will preserve any comment that is already present.
      * @param value The value
      */
-    operator fun set(path: String, comment: String = "", value: Any?) {
-        val finalComment: String
-        if (comment.isNotEmpty()) {
-            finalComment = comment
+    operator fun set(path: String, comment: Iterable<String>, value: Any?) {
+        val finalComment: MutableList<String> = ArrayList()
+        if (comment.count() > 0) {
+            finalComment.addAll(comment)
         } else {
             val section = get(path)
-            finalComment = section?.comment?.joinToString(System.lineSeparator()) ?: ""
+            val toAdd = section?.comment ?: emptyList()
+            finalComment.addAll(toAdd)
         }
         this[path] = Key().also {
             it value value
@@ -50,13 +51,14 @@ class Group : BaseConfigurationSection() {
         }
     }
 
+
     /**
      * Sets an entry to a given [Key].
      *
      * @param path The path to set the value for
      * @param key The [Key] to set
      */
-    operator fun set(path: String, key: Key) {
+    private operator fun set(path: String, key: BaseConfigurationSection) {
         if ("." !in path) {
             if (hasChild(path)) {
                 val child = getChild(path)
@@ -88,6 +90,19 @@ class Group : BaseConfigurationSection() {
             group = child
         }
         group[parts.subList(1, parts.size).joinToString(".")] = key
+    }
+
+    /**
+     * Creates a new group at the given path.
+     *
+     * @param path the path to create the group at
+     * @param comments any comments
+     */
+    fun createGroup(path: String, comments: Iterable<String>) {
+        val group = Group()
+        group doc comments
+        group name path
+        set(path, group)
     }
 
     /**
@@ -199,6 +214,4 @@ class Group : BaseConfigurationSection() {
     override fun toString(): String {
         return "Group(keyword=$keyword, path=${getPath()}, children=$children, comment=$comment)"
     }
-
-
 }

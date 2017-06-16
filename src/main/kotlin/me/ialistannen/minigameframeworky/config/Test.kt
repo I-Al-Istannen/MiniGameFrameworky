@@ -3,6 +3,7 @@ package me.ialistannen.minigameframeworky.config
 import me.ialistannen.minigameframeworky.config.io.comment.BasicCommentInjector
 import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlConfigParser
 import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlLineMapper
+import me.ialistannen.minigameframeworky.config.io.loading.YamlLoader
 import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
 import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
@@ -29,6 +30,11 @@ fun main(args: Array<String>) {
                     this name "deeper nested key"
                     this value "lol"
                 }
+            }
+
+            group {
+                this name "no child"
+                this doc "I have no children"
             }
         }
     }
@@ -72,7 +78,7 @@ fun main(args: Array<String>) {
     })
     println()
     println("==== Saving ====")
-    val configAsString = YamlSaver().saveToString(config)
+    val configAsString = YamlSaver().saveToString(config, false)
     println("Yaml:\n$configAsString")
     println()
     println("==== Comments ====")
@@ -95,14 +101,23 @@ fun main(args: Array<String>) {
         parse(withcomments)
     }
     println()
-    println("==== Extracting comments ====")
+    println("==== Extracting Identifiers and adding comments ====")
     println()
     val extractedComments = YamlLineMapper().extract(configAsString)
-    extractedComments.forEach { println(it) }
+    extractedComments.forEach { println("Identifier found: > $it") }
     println()
     val lineMappingsDynamic = extractedComments
             .associateBy({ it.line }, { config.get<ConfigurationSection>(it.path)!! })
     val withCommentsDynamic = BasicCommentInjector("# ").inject(
             configAsString, lineMappingsDynamic)
-    println("With comments dynamic:\n$withCommentsDynamic")
+    println("With comments dynamic:\n" + withCommentsDynamic)
+    println()
+    println("==== Back to config ====")
+    println()
+    val loadedConfig = YamlLoader().load(withCommentsDynamic, config.name)
+    println(loadedConfig)
+    println()
+    println("==== Re-output read config ====")
+    println()
+    println(YamlSaver().saveToString(loadedConfig, true))
 }

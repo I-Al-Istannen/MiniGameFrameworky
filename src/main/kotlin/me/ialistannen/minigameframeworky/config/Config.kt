@@ -69,6 +69,17 @@ class Config(val name: String) {
      * @param value The value
      */
     operator fun set(path: String, comment: String, value: Any?) {
+        this[path, listOf(comment)] = value
+    }
+
+    /**
+     * Sets an entry. Makes a new [Key].
+     *
+     * @param path The path to set the value for
+     * @param comment The comment.
+     * @param value The value
+     */
+    operator fun set(path: String, comment: Iterable<String>, value: Any?) {
         rootGroup[path, comment] = value
     }
 
@@ -82,7 +93,17 @@ class Config(val name: String) {
      * @see set(String, String, Any?)
      */
     operator fun set(path: String, value: Any?) {
-        rootGroup[path, ""] = value
+        this[path, emptyList()] = value
+    }
+
+    /**
+     * Creates a new group at the given path.
+     *
+     * @param path the path to create the group at
+     * @param comments any comments
+     */
+    fun createGroup(path: String, comments: Iterable<String> = emptyList()) {
+        rootGroup.createGroup(path, comments)
     }
 
     /**
@@ -139,4 +160,8 @@ class Config(val name: String) {
     }
 
     operator fun contains(path: String) = path in rootGroup
+
+    override fun toString(): String {
+        return "Config(name='$name', rootGroup=$rootGroup)"
+    }
 }

@@ -15,12 +15,12 @@ interface ConfigParser {
     /**
      * Called when a comment is found.
      */
-    val onFoundComment: (FoundComment) -> Unit
+    var onFoundComment: (FoundComment) -> Unit
 
     /**
      * Called when an Identifier is found.
      */
-    val onFoundIdentifier: (FoundIdentifier) -> Unit
+    var onFoundIdentifier: (FoundIdentifier) -> Unit
 
     /**
      * Parses the input type and calls the handlers when appropiate.
@@ -41,11 +41,24 @@ interface ConfigParser {
      * @param line the line number it occurred in
      */
     data class FoundIdentifier(val path: String, val line: Int)
+
+    companion object {
+
+        /**
+         * @param configType The type of the config
+         * @eturn a parser for the given [ConfigType].
+         */
+        fun getParser(configType: ConfigType): ConfigParser {
+            return when (configType) {
+                ConfigType.YAML -> YamlConfigParser()
+            }
+        }
+    }
 }
 
 /**
  * The type of the config
  */
 enum class ConfigType {
-    JSON, YAML
+    YAML
 }
