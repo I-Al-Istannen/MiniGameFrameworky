@@ -1,8 +1,13 @@
 package me.ialistannen.minigameframeworky.config
 
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigType
+import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
 import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
 import me.ialistannen.minigameframeworky.config.parts.Key
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
@@ -160,6 +165,46 @@ class Config(val name: String) {
     }
 
     operator fun contains(path: String) = path in rootGroup
+
+    /**
+     * Saves the config to a string.
+     *
+     * @param configType the type of the config.
+     * @param withComments whether to include comments
+     * @param keepEmptyGroups whether to keep empty groups
+     * @return the config as a string.
+     */
+    fun saveToString(configType: ConfigType = ConfigType.YAML,
+                     withComments: Boolean = true,
+                     keepEmptyGroups: Boolean = true): String {
+        return when (configType) {
+            ConfigType.YAML -> YamlSaver().saveToString(this, withComments, keepEmptyGroups)
+        }
+    }
+
+    /**
+     * Saves the config to a a file.
+     *
+     * @param configType The type of the config.
+     * @param path The [Path] to save it to
+     * @param withComments whether to include comments
+     * @param keepEmptyGroups whether to keep empty groups
+     */
+    fun saveToFile(configType: ConfigType = ConfigType.YAML, path: Path,
+                   withComments: Boolean = true,
+                   keepEmptyGroups: Boolean = true) {
+
+        val saveAsString = saveToString(configType, withComments, keepEmptyGroups)
+
+        if (Files.isDirectory(path.parent) && Files.notExists(path.parent)) {
+            Files.createDirectories(path.parent)
+        }
+        Files.write(path,
+                listOf(saveAsString),
+                StandardOpenOption.WRITE,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING)
+    }
 
     override fun toString(): String {
         return "Config(name='$name', rootGroup=$rootGroup)"

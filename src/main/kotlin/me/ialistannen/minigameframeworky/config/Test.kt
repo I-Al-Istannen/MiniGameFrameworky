@@ -1,6 +1,7 @@
 package me.ialistannen.minigameframeworky.config
 
 import me.ialistannen.minigameframeworky.config.io.comment.BasicCommentInjector
+import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigType
 import me.ialistannen.minigameframeworky.config.io.comment.configparser.YamlConfigParser
 import me.ialistannen.minigameframeworky.config.io.comment.mapper.YamlLineMapper
 import me.ialistannen.minigameframeworky.config.io.loading.YamlLoader
@@ -8,6 +9,7 @@ import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
 import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
 import me.ialistannen.minigameframeworky.config.parts.Key
+import java.nio.file.Paths
 
 fun main(args: Array<String>) {
     val config = Config("my cool one") {
@@ -120,4 +122,7 @@ fun main(args: Array<String>) {
     println("==== Re-output read config ====")
     println()
     println(YamlSaver().saveToString(loadedConfig, true))
+    println()
+    val savePath = Paths.get("/tmp", "config_test.yml")
+    config.saveToFile(ConfigType.YAML, savePath)
 }
