@@ -1,10 +1,14 @@
 package me.ialistannen.minigameframeworky.config
 
 import me.ialistannen.minigameframeworky.config.io.comment.configparser.ConfigType
+import me.ialistannen.minigameframeworky.config.io.loading.YamlLoader
 import me.ialistannen.minigameframeworky.config.io.saving.YamlSaver
 import me.ialistannen.minigameframeworky.config.parts.ConfigurationSection
 import me.ialistannen.minigameframeworky.config.parts.Group
 import me.ialistannen.minigameframeworky.config.parts.Key
+import me.ialistannen.minigameframeworky.util.fileNameWithoutExtension
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -26,6 +30,50 @@ class Config(val name: String) {
      */
     constructor(name: String, init: Group.() -> Unit) : this(name) {
         rootGroup.init()
+    }
+
+    companion object {
+
+        /**
+         * Loads a [Config] from a [Path].
+         *
+         * @param file the [Path] to load from
+         * @param name the name of the config. An empty String means file name
+         * @param configType the [ConfigType] of the config
+         * @return the loaded [Config]
+         * @throws IOException if an error occurs while reading
+         */
+        fun loadFromFile(file: Path,
+                         name: String = "",
+                         configType: ConfigType = ConfigType.YAML): Config {
+            val configName: String
+            if (name.isBlank()) {
+                configName = file.fileNameWithoutExtension()
+            } else {
+                configName = name
+            }
+
+            val content = Files.readAllLines(file, StandardCharsets.UTF_8).joinToString("\n")
+
+            return loadFromString(content, configName, configType)
+        }
+
+        /**
+         * Loads a [Config] from a String.
+         *
+         * @param string the string to load
+         * @param name the name of the config
+         * @param configType the [ConfigType] of the config
+         */
+        fun loadFromString(string: String,
+                           name: String,
+                           configType: ConfigType = ConfigType.YAML): Config {
+            when (configType) {
+                ConfigType.YAML -> {
+                    return YamlLoader().load(string, name)
+                }
+            }
+        }
     }
 
     /**

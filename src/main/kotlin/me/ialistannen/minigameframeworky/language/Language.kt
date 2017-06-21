@@ -43,6 +43,10 @@ class Language(@Suppress("CanBeParameter") val locale: Locale, private val confi
 
         return resolve.resolve(key, this, value, params)
     }
+
+    override fun toString(): String {
+        return "Language(locale=$locale, config=$config)"
+    }
 }
 
 enum class Resolve(

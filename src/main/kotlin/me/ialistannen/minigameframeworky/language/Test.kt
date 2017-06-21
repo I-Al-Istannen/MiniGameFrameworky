@@ -1,6 +1,7 @@
 package me.ialistannen.minigameframeworky.language
 
 import me.ialistannen.minigameframeworky.config.Config
+import java.nio.file.Paths
 
 import java.util.*
 
@@ -62,4 +63,10 @@ fun main(args: Array<String>) {
     println("==== Translating ALL ====")
     println()
     println(language.translate("basic_key", Resolve.ALL, 2, 5, "[[nested_example]]"))
+
+    println()
+    println("==== LanguageManager tests ====")
+    println()
+
+    println(LanguageManager(Paths.get("/tmp", "test")).languages)
 }
